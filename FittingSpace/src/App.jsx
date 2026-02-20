@@ -4,64 +4,85 @@ import './App.css'
 function App() {
   const videoRef = useRef(null);
   const photoRef = useRef(null);
-
   const [hasPhoto, setHasPhoto] = useState(false);
+  
+  // New State for the data your friend is providing
+  const [detectionData, setDetectionData] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  //camera
   const getVideo = () => {
     navigator.mediaDevices
-      .getUserMedia({ 
-        video: {width: 1920, height: 1080}
-      })
+      .getUserMedia({ video: { width: 1920, height: 1080 } })
       .then(stream => {
         let video = videoRef.current;
         video.srcObject = stream;
         video.play();
       })
-      .catch(err => {
-        console.error(err);
-      })
+      .catch(err => console.error(err));
   }
 
-  const takePhoto = () => {
+  const takePhoto = async () => {
     const width = 414;
-    const height = width / (16/9);
+    const height = width * (16 / 9); // Flipped to 16/9 ratio for portrait feel
 
     let video = videoRef.current;
     let photo = photoRef.current;
-
     photo.width = width;
     photo.height = height;
 
     let ctx = photo.getContext('2d');
     ctx.drawImage(video, 0, 0, width, height);
-      setHasPhoto(true);
+    setHasPhoto(true);
 
+    // --- START: YOUR FRIEND'S ENTRY POINT ---
+    setIsProcessing(true);
+    
+    // This represents the function your friend will write
+    // const result = await friendFunction.analyzeImage(photo); 
+    // setDetectionData(result);
+    
+    setIsProcessing(false);
+    // --- END ---
   }
 
   useEffect(() => {
     getVideo();
-  }, [videoRef])
+  }, []); // Removed videoRef from dependency to prevent re-renders
 
   const closePhoto = () => {
-    let photo = photoRef.current;
-    let ctx = photo.getContext('2d');
-    ctx.clearRect(0,0, photo.width, photo.height);
     setHasPhoto(false);
+    setDetectionData(null);
   }
+
   return (
-      <div className="App">
-        <div className = "camera">
-          <video ref={videoRef}></video> 
-          <button onClick=
-          {takePhoto}>Capture</button>
-        <div className={'result ' + (hasPhoto ? 'hasPhoto' : '')}> 
+    <div className="App">
+      <div className="camera">
+        <video ref={videoRef} style={{ display: hasPhoto ? 'none' : 'block' }}></video>
+        {!hasPhoto && <button onClick={takePhoto}>Capture</button>}
+
+        <div className={'result ' + (hasPhoto ? 'hasPhoto' : '')}>
           <canvas ref={photoRef}></canvas>
-          <button onClick={closePhoto}>CLOSE</button>
-        </div>
-        
+          
+          {/* Conditional UI based on Friend's detection data */}
+          {hasPhoto && (
+            <div className="controls">
+              {isProcessing && <p>Analyzing Body...</p>}
+              
+              {detectionData?.valid ? (
+                <>
+                  <p>✅ This looks good!</p>
+                  <button onClick={() => alert("Moving to dressing room!")}>Continue</button>
+                </>
+              ) : (
+                !isProcessing && <p>❌ Body not detected. Try again.</p>
+              )}
+              
+              <button onClick={closePhoto}>RESTART</button>
+            </div>
+          )}
         </div>
       </div>
+    </div>
   );
 }
 

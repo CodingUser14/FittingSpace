@@ -7,62 +7,121 @@
 
 .App {
   min-height: 100vh;
-  position: relative;
-  background-color: black;
+  background-color: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
 .camera {
   position: relative;
-}
-
-.result {
-  position: fixed;
-  top: 0;
-  left: 100%;
   width: 100%;
-  height: 100%;
+  max-width: 500px; /* Limits size on desktop for better framing */
+  height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.9);
-  transition: 0.4s;
-}
-
-.result.hasPhoto {
-  left: 0;
 }
 
 video {
   width: 100%;
-  max-width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover; /* Ensures the video fills the screen like TikTok/Instagram */
 }
 
-button {
-  /*making a circle */
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: white;
-  border: 2px solid #8b8a8a;
-  position: relative;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  outline: none;
-  overflow: visible;
-}
-
-button::before{
-  content: '';
-  position: absolute;
+/* The Photo Preview Overlay */
+.result {
+  position: fixed;
+  top: 0;
+  left: 100%; /* Hidden by default */
   width: 100%;
   height: 100%;
-  background-color: white;
-  border-radius: 50%;
-  z-index: -1; /*puts it behind any text or icon */
-  transition: transform 0.15s ease; /*controls speed of shrink*/
+  background-color: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: 0.4s ease-in-out;
+  z-index: 10;
 }
 
-button:active::before {
-  transform: scale(0.85); /*shrinks white by 15%*/
+.result.hasPhoto {
+  left: 0; /* Slides in when photo is taken */
+}
+
+canvas {
+  width: 100%;
+  height: auto;
+  max-height: 70vh;
+  object-fit: contain;
+  margin-top: 20px;
+}
+
+/* UI Controls for Validation & Buttons */
+.controls {
+  padding: 20px;
+  text-align: center;
+  color: white;
+  width: 100%;
+}
+
+.status-msg {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.btn-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* Updated Button Styles */
+button {
+  appearance: none;
+  border: none;
+  outline: none;
+  padding: 12px 24px;
+  background-image: linear-gradient(to right, #844FFF 0%, #FF4F84 50%, #844FFF 100%);
+  background-size: 200%;
+  background-position: 0%;
+  color: #FFF;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 50px; /* Rounded pill shape */
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-position: 100%;
+  transform: scale(1.05);
+}
+
+/* Special styling for the Capture button on the live camera */
+.capture-btn {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 4px solid white;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Countdown Overlay */
+.countdown {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 120px;
+  color: white;
+  font-weight: 900;
+  text-shadow: 0 0 20px rgba(0,0,0,0.5);
+  pointer-events: none;
 }

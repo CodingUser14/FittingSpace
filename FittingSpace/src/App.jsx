@@ -6,7 +6,6 @@ function App() {
   const photoRef = useRef(null);
   const [hasPhoto, setHasPhoto] = useState(false);
   
-  // New State for the data your friend is providing
   const [detectionData, setDetectionData] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -23,7 +22,7 @@ function App() {
 
   const takePhoto = async () => {
     const width = 414;
-    const height = width * (16 / 9); // Flipped to 16/9 ratio for portrait feel
+    const height = width * (16 / 9); 
 
     let video = videoRef.current;
     let photo = photoRef.current;
@@ -34,10 +33,10 @@ function App() {
     ctx.drawImage(video, 0, 0, width, height);
     setHasPhoto(true);
 
-    // --- START: YOUR FRIEND'S ENTRY POINT ---
+    // --- START ENTRY POINT ---
     setIsProcessing(true);
     
-    // This represents the function your friend will write
+    //  the function you should write
     // const result = await friendFunction.analyzeImage(photo); 
     // setDetectionData(result);
     
@@ -47,7 +46,7 @@ function App() {
 
   useEffect(() => {
     getVideo();
-  }, []); // Removed videoRef from dependency to prevent re-renders
+  }, []); 
 
   const closePhoto = () => {
     setHasPhoto(false);
@@ -63,7 +62,6 @@ function App() {
         <div className={'result ' + (hasPhoto ? 'hasPhoto' : '')}>
           <canvas ref={photoRef}></canvas>
           
-          {/* Conditional UI based on Friend's detection data */}
           {hasPhoto && (
             <div className="controls">
               {isProcessing && <p>Analyzing Body...</p>}

@@ -52,7 +52,7 @@ button {
   overflow: visible;
 }
 
-.button::before{
+button::before{
   content: '';
   position: absolute;
   width: 100%;

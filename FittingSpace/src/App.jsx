@@ -10,7 +10,7 @@ function App() {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const [countdown, setCountdown] = useState(null);
-  const [delaySeconds, setDelaySeconds] = useState(5); // 🔥 Change this to control delay
+  const [delaySeconds, setDelaySeconds] = useState(5); 
 
   // --- GET CAMERA ---
   const getVideo = () => {
@@ -42,8 +42,8 @@ function App() {
 
   // --- ACTUAL PHOTO CAPTURE ---
   const capturePhoto = async () => {
-    const width = 414;
-    const height = width * (16 / 9);
+    const width = 1920;
+    const height = 1080;
 
     let video = videoRef.current;
     let photo = photoRef.current;
@@ -58,11 +58,49 @@ function App() {
 
     setIsProcessing(true);
 
-  
+    //converting canvas into a img file
+    photo.toBlob(async (blob) => {
+      const formData = new FormData();
+      formData.append('image', blob, 'capture.png');
 
-    setIsProcessing(false);
-    // --- END ---
-  };
+      try {
+          //send it to python server
+          const response = await fetch('http://127.0.0.1:5050/checking', {
+            method: 'POST',
+            body: formData,
+          });
+
+          const result = await response.json();
+
+          // save the coordinates python found
+          setDetectionData(result);
+
+          //TESTING PURPOSES DELETE AFTERWARDS
+          if (result.valid && result.landmarks) {
+            const ctx = photo.getContext('2d');
+            ctx.fillStyle = "red"; // Color for the dots
+            ctx.strokeStyle = "white";
+            ctx.lineWidth = 3;
+
+            // result.landmarks is the filtered_points dictionary from Python
+            Object.values(result.landmarks).forEach(point => {
+              if (point.visible) {
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, 10, 0, 2 * Math.PI); // Draw a circle
+                ctx.fill();
+                ctx.stroke();
+              }
+            });
+          }
+          //******************** */
+
+      } catch (err) {
+        console.error("Couldn't reach Python server: ", err);
+      } finally {
+        setIsProcessing(false);
+      }
+    }, 'image/png');
+    }
 
   useEffect(() => {
     getVideo();
@@ -77,7 +115,6 @@ function App() {
     <div className="App">
       <div className="camera">
 
-        {/* Countdown Overlay */}
         {countdown !== null && (
           <div className="countdown">
             {countdown}
@@ -86,7 +123,9 @@ function App() {
 
         <video
           ref={videoRef}
+          onPause={(e) => e.target.play()} // if it pauses force it to continue
           style={{ display: hasPhoto ? 'none' : 'block' }}
+          playsInline // prevents browser from opening the vid in its own native player
         ></video>
 
         {!hasPhoto && countdown === null && (

@@ -1,13 +1,26 @@
 import { useRef, useEffect, useState } from 'react'
+import { Pose } from '@mediapipe/pose' 
 import './App.css'
 
 function App() {
   const videoRef = useRef(null);
   const photoRef = useRef(null);
+  const poseRef = useRef(null);
+
   const [hasPhoto, setHasPhoto] = useState(false);
-  
   const [detectionData, setDetectionData] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
+
+  /*Initiazliing mediapipe*/  
+  useEffect(() => {
+    getVideo();
+
+    const pose = newPose({
+      locateFile: (file) => 'h'
+
+    });
+
+  })
 
   const getVideo = () => {
     navigator.mediaDevices
@@ -33,16 +46,15 @@ function App() {
     ctx.drawImage(video, 0, 0, width, height);
     setHasPhoto(true);
 
-    // --- START ENTRY POINT ---
     setIsProcessing(true);
     
-    //  the function you should write
-    // const result = await friendFunction.analyzeImage(photo); 
-    // setDetectionData(result);
+
     
     setIsProcessing(false);
-    // --- END ---
+    
   }
+
+  
 
   useEffect(() => {
     getVideo();

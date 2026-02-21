@@ -10,8 +10,18 @@ function App() {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const [countdown, setCountdown] = useState(null);
-  const [delaySeconds, setDelaySeconds] = useState(5); 
+  const [delaySeconds, setDelaySeconds] = useState(3); 
+  const [showSettings, setShowSettings] = useState(false); 
 
+  // Brightness
+  const [brightness, setBrightness] = useState(100); 
+
+  // Contrast
+  const [contrast, setContrast] = useState(100); 
+
+  // Button Styling 
+  const btnStyle = { padding: '5px 12px', cursor: 'pointer' }; 
+  
   // --- GET CAMERA ---
   const getVideo = () => {
     navigator.mediaDevices
@@ -26,6 +36,13 @@ function App() {
 
   // --- START COUNTDOWN ---
   const startCountdown = () => {
+  
+  setShowSettings(false); 
+    if (delaySeconds === 0) { 
+      capturePhoto(); 
+    return; 
+    } 
+  
     setCountdown(delaySeconds);
 
     let timer = setInterval(() => {
@@ -54,8 +71,10 @@ function App() {
     let ctx = photo.getContext('2d');
     ctx.drawImage(video, 0, 0, width, height);
 
-    setHasPhoto(true);
+    ctx.filter = "brightness(${brightness}%)contrast(${contrast}%)";
+    ctx.drawImage(video, 0,0,width,height);
 
+    setHasPhoto(true);
     setIsProcessing(true);
 
     //converting canvas into a img file
@@ -111,54 +130,243 @@ function App() {
     setDetectionData(null);
   };
 
-  return (
-    <div className="App">
-      <div className="camera">
+  const decreaseTimer = () => setDelaySeconds(prev => Math.max(0, prev - 1));
+  const  increaseTimer = () => setDelaySeconds(prev => prev + 1);
 
-        {countdown !== null && (
-          <div className="countdown">
-            {countdown}
+  return (
+  <div className="App" style={{ position: 'relative' }}>
+    <div className="camera">
+      
+      {/* Settings Icon Button */}
+      {!hasPhoto && countdown === null && (
+        <button
+          onClick={() => setShowSettings(prev => !prev)}
+          style={{
+            position: 'absolute',
+            top: '15px',
+            left: '15px',
+            zIndex: 10,
+            background: 'rgba(0,0,0,0.6)',
+            border: 'none',
+            borderRadius: '50%',
+            width: '40px',
+            height: '40px',
+            cursor: 'pointer',
+            fontSize: '1.2rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+          title="Settings"
+        >
+          ⚙️
+        </button>
+      )}
+
+      {/* Settings Popup Modal */}
+      {showSettings && !hasPhoto && countdown === null && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            background: 'white',
+            padding: '20px 30px',
+            borderRadius: '12px',
+            zIndex: 20,
+            boxShadow: '0 8px 16px rgba(0,0,0,0.5)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '15px',
+            color: '#333',
+            width: '250px'
+          }}
+        >
+          <h3 style={{ margin: 0 }}>Settings</h3>
+
+          {/* Delay Control */}
+          <div
+            style={{
+              width: '110%',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              border: '1px solid #ccc',
+              borderRadius: '10px',
+              padding: '10px 12px',
+              background: '#f9f9f9'
+            }}
+          >
+            <span style={{ fontWeight: '500' }}>Delay</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <strong>{delaySeconds}s</strong>
+              <button
+                onClick={decreaseTimer}
+                style={{ ...btnStyle, padding: '4px 10px' }}
+              >
+                -
+              </button>
+              <button
+                onClick={increaseTimer}
+                style={{ ...btnStyle, padding: '4px 10px' }}
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          {/* Brightness Control */}
+          <div
+            style={{
+              width: '110%',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              border: '1px solid #ccc',
+              borderRadius: '10px',
+              padding: '10px 12px',
+              background: '#f9f9f9'
+            }}
+          >
+            <span style={{ fontWeight: '500' }}>Light</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <strong>{brightness}%</strong>
+              <button
+                onClick={() => setBrightness(prev => Math.max(0, prev - 10))}
+                style={{ ...btnStyle, padding: '4px 10px' }}
+              >
+                -
+              </button>
+              <button
+                onClick={() => setBrightness(prev => Math.min(200, prev + 10))}
+                style={{ ...btnStyle, padding: '4px 10px' }}
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          {/* Contrast Control */}
+          <div
+            style={{
+              width: '110%',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              border: '1px solid #ccc',
+              borderRadius: '10px',
+              padding: '10px 12px',
+              background: '#f9f9f9'
+            }}
+          >
+            <span style={{ fontWeight: '500' }}>Contrast</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <strong>{contrast}%</strong>
+              <button
+                onClick={() => setContrast(prev => Math.max(0, prev - 10))}
+                style={{ ...btnStyle, padding: '4px 10px' }}
+              >
+                -
+              </button>
+              <button
+                onClick={() => setContrast(prev => Math.min(200, prev + 10))}
+                style={{ ...btnStyle, padding: '4px 10px' }}
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          <button
+            onClick={() => setShowSettings(false)}
+            style={{
+              padding: '10px 16px',
+              marginTop: '20px',
+              cursor: 'pointer',
+              background: '#333',
+              color: 'white',
+              border: 'none',
+              borderRadius: '10px',
+              width: '100%'
+            }}
+          >
+            Done
+          </button>
+        </div>
+      )}
+
+      {/* Countdown Overlay */}
+      {countdown !== null && (
+        <div
+          className="countdown"
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            fontSize: '4rem',
+            color: 'white',
+            zIndex: 10
+          }}
+        >
+          {countdown}
+        </div>
+      )}
+
+      <video
+        ref={videoRef}
+        style={{
+          display: hasPhoto ? 'none' : 'block',
+          width: '100%',
+          filter: `brightness(${brightness}%) contrast(${contrast}%)`
+        }}
+      ></video>
+
+      {/* Capture Button */}
+      {!hasPhoto && countdown === null && (
+        <button
+          onClick={startCountdown}
+          style={{
+            position: 'absolute',
+            bottom: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 10
+          }}
+        >
+          Capture
+        </button>
+      )}
+
+      <div
+        className={'result ' + (hasPhoto ? 'hasPhoto' : '')}
+        style={{ display: hasPhoto ? 'block' : 'none' }}
+      >
+        <canvas ref={photoRef}></canvas>
+
+        {hasPhoto && (
+          <div className="controls">
+            {isProcessing && <p>Analyzing Body...</p>}
+
+            {detectionData?.valid ? (
+              <>
+                <p>✅ This looks fantastic!</p>
+                <button onClick={() => alert("Moving to dressing room!")}>
+                  Continue
+                </button>
+              </>
+            ) : (
+              !isProcessing && <p>❌ Body not detected. Try again.</p>
+            )}
+
+            <button onClick={closePhoto}>RETAKE</button>
           </div>
         )}
-
-        <video
-          ref={videoRef}
-          onPause={(e) => e.target.play()} // if it pauses force it to continue
-          style={{ display: hasPhoto ? 'none' : 'block' }}
-          playsInline // prevents browser from opening the vid in its own native player
-        ></video>
-
-        {!hasPhoto && countdown === null && (
-          <button onClick={startCountdown}>
-            Capture
-          </button>
-        )}
-
-        <div className={'result ' + (hasPhoto ? 'hasPhoto' : '')}>
-          <canvas ref={photoRef}></canvas>
-
-          {hasPhoto && (
-            <div className="controls">
-              {isProcessing && <p>Analyzing Body...</p>}
-
-              {detectionData?.valid ? (
-                <>
-                  <p>✅ This looks good!</p>
-                  <button onClick={() => alert("Moving to dressing room!")}>
-                    Continue
-                  </button>
-                </>
-              ) : (
-                !isProcessing && <p>❌ Body not detected. Try again.</p>
-              )}
-
-              <button onClick={closePhoto}>RESTART</button>
-            </div>
-          )}
-        </div>
       </div>
     </div>
-  );
+  </div>
+);
 }
-
 export default App;

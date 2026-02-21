@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import cv2
 import mediapipe as mp
 from flask import Flask, request, jsonify
@@ -31,3 +32,6 @@ def checking():
     }
     
     return jsonify(data)
+=======
+#Start ur code
+>>>>>>> 30cb36460b7ad4473a6e6780b3b4ea6a28eabfe3

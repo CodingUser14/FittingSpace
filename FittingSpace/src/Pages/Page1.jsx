@@ -11,7 +11,6 @@ export default function Page1() {
     const [wardrobe, setWardrobe] = useState([]);
     const [garmentType, setGarmentType] = useState("tshirt");
     
-    // Track one shirt and one pair of pants simultaneously
     const [outfit, setOutfit] = useState({ tshirt: null, pants: null });
 
     const getPoint = (id) => {
@@ -23,7 +22,6 @@ export default function Page1() {
         return { x, y };
     };
 
-    // Helper function to calculate styles for any garment type
     const getGarmentStyle = (item, type) => {
         if (!item || !landmarks) return { display: 'none' };
 
@@ -39,26 +37,18 @@ export default function Page1() {
             width = Math.sqrt(Math.pow(rSh.x - lSh.x, 2) + Math.pow(rSh.y - lSh.y, 2)) * 2.2;
             rotation = (Math.atan2(lSh.y - rSh.y, lSh.x - rSh.x) * 180) / Math.PI;
         } else {
-            // --- PANTS LOGIC ---
             centerX = (lHip.x + rHip.x) / 2;
             
             const hipY = (lHip.y + rHip.y) / 2;
             const kneeY = (getPoint(25).y + getPoint(26).y) / 2;
             const legLength = kneeY - hipY;
 
-            /**
-             * VERTICAL ADJUSTMENT:
-             * 0.5 is the midpoint between hips and knees.
-             * Increase this (e.g., 0.65 or 0.7) to move the pants DOWN.
-             * Decrease this (e.g., 0.4) to move the pants UP.
-             */
+           
             centerY = hipY + (legLength * 0.7); 
 
-            // Scale based on hip width
             const hipDist = Math.sqrt(Math.pow(rHip.x - lHip.x, 2) + Math.pow(rHip.y - lHip.y, 2));
             width = hipDist * 2.8; 
 
-            // Rotation based on hip tilt
             rotation = (Math.atan2(lHip.y - rHip.y, lHip.x - rHip.x) * 180) / Math.PI;
         }
 
@@ -78,7 +68,6 @@ export default function Page1() {
     const handleSelect = (item) => {
         setOutfit(prev => ({
             ...prev,
-            // If already selected, toggle it off (null), otherwise set it
             [garmentType]: prev[garmentType]?.id === item.id ? null : item
         }));
     };
@@ -103,7 +92,6 @@ export default function Page1() {
                     <div className="image-wrapper" style={{ position: 'relative', display: 'inline-block' }}>
                         <img src={imageUrl} alt="person" className="person-img" style={{ display: 'block', maxWidth: '100%', maxHeight: '80vh' }} />
                         
-                        {/* Always try to render both slots */}
                         {outfit.pants && (
                             <img src={outfit.pants.url} style={getGarmentStyle(outfit.pants, "pants")} alt="pants-overlay" />
                         )}

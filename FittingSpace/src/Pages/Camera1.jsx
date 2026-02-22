@@ -15,10 +15,8 @@ export default function Camera1() {
   const [delaySeconds, setDelaySeconds] = useState(3); 
   const [showSettings, setShowSettings] = useState(false); 
 
-  // Brightness
+  // Brightness and Contrast
   const [brightness, setBrightness] = useState(100); 
-
-  // Contrast
   const [contrast, setContrast] = useState(100); 
 
   // Button Styling 
@@ -73,7 +71,7 @@ export default function Camera1() {
     let ctx = photo.getContext('2d');
     ctx.drawImage(video, 0, 0, width, height);
 
-    ctx.filter = `brightness(${brightness}%) contrast(${contrast}%)`;
+    ctx.filter = "brightness(${brightness}%)contrast(${contrast}%)";
     ctx.drawImage(video, 0,0,width,height);
 
     setHasPhoto(true);
@@ -163,8 +161,7 @@ export default function Camera1() {
               </button>
               <button
                 onClick={increaseTimer}
-                style={{ ...btnStyle, padding: '4px 10px' }}
-              >
+                style={{ ...btnStyle, padding: '4px 10px' }}>
                 +
               </button>
             </div>
@@ -177,14 +174,12 @@ export default function Camera1() {
               <strong>{brightness}%</strong>
               <button
                 onClick={() => setBrightness(prev => Math.max(0, prev - 10))}
-                style={{ ...btnStyle, padding: '4px 10px' }}
-              >
+                style={{ ...btnStyle, padding: '4px 10px' }}>
                 -
               </button>
               <button
                 onClick={() => setBrightness(prev => Math.min(200, prev + 10))}
-                style={{ ...btnStyle, padding: '4px 10px' }}
-              >
+                style={{ ...btnStyle, padding: '4px 10px' }}>
                 +
               </button>
             </div>
@@ -197,14 +192,12 @@ export default function Camera1() {
               <strong>{contrast}%</strong>
               <button
                 onClick={() => setContrast(prev => Math.max(0, prev - 10))}
-                style={{ ...btnStyle, padding: '4px 10px' }}
-              >
+                style={{ ...btnStyle, padding: '4px 10px' }}>
                 -
               </button>
               <button
                 onClick={() => setContrast(prev => Math.min(200, prev + 10))}
-                style={{ ...btnStyle, padding: '4px 10px' }}
-              >
+                style={{ ...btnStyle, padding: '4px 10px' }}>
                 +
               </button>
             </div>
@@ -247,16 +240,13 @@ export default function Camera1() {
 
       <div
         className={'result ' + (hasPhoto ? 'hasPhoto' : '')}
-        style={{ display: hasPhoto ? 'block' : 'none' }}
-      >
+        style={{ display: hasPhoto ? 'block' : 'none' }}>
         <canvas ref={photoRef}></canvas>
 
         {hasPhoto && (
           <div className="controls">
             {isProcessing && <p>Analyzing Body...</p>}
-
-            {detectionData?.valid ? (
-              <>
+            {detectionData?.valid ? ( <>
                 <p>✅ This looks fantastic!</p>
                 <button
                   onClick={() => {

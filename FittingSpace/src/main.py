@@ -34,16 +34,26 @@ def checking():
         essential_ids = [11, 12, 13, 14, 23, 24, 25, 26, 27, 28]
         filtered_points = {}
         
+        visible_count = 0
+
         for idx in essential_ids:
             point = lm[idx]
+            is_visible = point.visibility > 0.5
+
+            if is_visible:
+                visible_count += 1
+
             filtered_points[idx] = {
             "x": int(point.x * w),
             "y": int(point.y * h),
-            "visible": point.visibility > 0.5 
+            "visible": point.visibility > 0.5,
             }
 
+            
+        is_valid = visible_count == 10  
+            
         return jsonify({
-            "valid": True,
+            "valid": is_valid,
             "message": f"success yay. size of image {w}x{h}",
             "shoulders": abs(filtered_points[11]["x"] - filtered_points[12]["x"]),
             "landmarks": filtered_points
@@ -51,7 +61,7 @@ def checking():
     else: 
         # what react will see if no person is in frame
         return jsonify({
-            "valid": False,
+            "valid": is_valid,
             "message": "No body detected"
         })
     

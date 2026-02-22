@@ -10,6 +10,28 @@ CORS(app) #enables Cross origin resouce sharing for flask app, allowing backend 
 mp_pose = mp.solutions.pose
 pose = mp_pose.Pose(static_image_mode=True, min_detection_confidence=0.5)
 
+def mask_fromrgba(img):
+    #extras a binary mask from alpha channel of a png
+    if img is None: return None
+    if img.shape[2] == 4:
+        alpha = img[:, :, 3]
+        return (alpha > 10).astype(np.uint8) * 255
+    return None
+
+def get_anchors(mask, garment_type):
+    ys, xs = np.where(mask > 0)
+    if len(xs) < 100: return None
+
+    h, w = mask.shape
+    y_min, y_max = int(ys.min(), int(ys.max()))
+    total_h = y_max - y_min
+
+
+    res = {
+        "top_left": {"x": top_pts}
+
+    }
+
 
 @app.route('/checking', methods=['POST'])
 def checking():
@@ -26,6 +48,7 @@ def checking():
 
     results = pose.process(img_rgb)
 
+    print("hello")
     
     if results.pose_landmarks:
         lm = results.pose_landmarks.landmark
@@ -61,7 +84,7 @@ def checking():
     else: 
         # what react will see if no person is in frame
         return jsonify({
-            "valid": is_valid,
+            "valid": False,
             "message": "No body detected"
         })
     

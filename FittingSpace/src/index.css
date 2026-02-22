@@ -18,7 +18,7 @@
 .camera {
   position: relative;
   width: 100%;
-  max-width: 1000px; /* Limits size on desktop for better framing */
+  max-width: 1000px; 
   height: 90%;
   display: flex;
   flex-direction: column;
@@ -28,14 +28,13 @@
 video {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Ensures the video fills the screen like TikTok/Instagram */
+  object-fit: cover; 
 }
 
-/* The Photo Preview Overlay */
 .result {
   position: fixed;
   top: 0;
-  left: 100%; /* Hidden by default */
+  left: 100%; 
   width: 100%;
   height: 100%;
   background-color: #000;
@@ -47,7 +46,7 @@ video {
 }
 
 .result.hasPhoto {
-  left: 0; /* Slides in when photo is taken */
+  left: 0; 
 }
 
 canvas {
@@ -58,7 +57,6 @@ canvas {
   margin-top: 20px;
 }
 
-/* UI Controls for Validation & Buttons */
 .controls {
   padding: 20px;
   text-align: center;
@@ -78,7 +76,6 @@ canvas {
   justify-content: center;
 }
 
-/* Updated Button Styles */
 button {
   appearance: none;
   border: none;
@@ -90,7 +87,7 @@ button {
   color: #FFF;
   font-size: 18px;
   font-weight: 700;
-  border-radius: 50px; /* Rounded pill shape */
+  border-radius: 50px;
   cursor: pointer;
   transition: 0.3s;
 }
@@ -100,7 +97,6 @@ button:hover {
   transform: scale(1.05);
 }
 
-/* Special styling for the Capture button on the live camera */
 .capture-btn {
   position: absolute;
   bottom: 40px;
@@ -113,7 +109,6 @@ button:hover {
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* Countdown Overlay */
 .countdown {
   position: absolute;
   top: 50%;
@@ -125,3 +120,276 @@ button:hover {
   text-shadow: 0 0 20px rgba(0,0,0,0.5);
   pointer-events: none;
 }
+
+.setting {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 10;
+  background: rgba(0,0,0,0.6);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup_window {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px 30px;
+  border-radius: 12px;
+  z-index: 20;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  color: #333;
+  width: 250px;
+}
+
+.delay_control {
+  width: 110%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #f9f9f9;
+}
+
+.brightness_control {
+  width: 110%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #f9f9f9;
+}
+
+.contrast_control {
+  width: 110%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #f9f9f9;
+}
+
+.done_setting {          
+  padding: 10px 16px;
+  margin-top: 20px;
+  cursor: pointer;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.backBtn {
+  width: 80px;
+  height: 80px;  
+}
+
+.captureImg {
+  scale: 0.5;
+
+}
+
+.app-shell { 
+  display: flex; 
+  width: 100vw; 
+  height: 100vh; 
+  background: #121212; 
+  color: white; 
+  padding: 20px; 
+  box-sizing: border-box; 
+  gap: 20px; 
+}
+
+.main-content { 
+  display: flex; 
+  flex: 1; 
+  width: 100%;
+  height: 100%;
+}
+
+.person-viewer {
+  flex: 1; 
+  display: flex; 
+  height: 100%;
+  justify-content: center; 
+  align-items: center; 
+  background: #1a1a1a; 
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.image-wrapper { 
+  position: relative; 
+  height: 100%; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.person-img { 
+  height: 100%; 
+  width: auto;
+  object-fit: contain;
+  position: relative;
+}
+
+.warper-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 99;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+.wardrobe-sidebar { 
+  width: 350px; 
+  background: #1e1e1e; 
+  padding: 20px; 
+  display: flex; 
+  flex-direction: column; 
+  border-radius: 15px; 
+}
+
+.wardrobe-box { 
+  flex: 1; 
+  overflow-y: auto; 
+  background: #000; 
+  margin: 15px 0; 
+  padding: 15px; 
+  border-radius: 8px; 
+}
+
+.garment-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 per row */
+  gap: 12px;
+}
+
+.garment-item {
+    aspect-ratio: 1 / 1; /* Forced Square */
+    background: #222;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.garment-item:hover { border-color: #444; }
+.garment-item.selected { border-color: #007bff; background: #2a2a2a; }
+
+.garment-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Keeps shirt visible without cropping edges */
+    padding: 5px;
+}
+
+.upload-trigger {
+    background: #28a745;
+    color: white;
+    padding: 14px;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.upload-trigger:hover { background: #218838; }
+
+.back-button {
+    position: absolute;
+    top: 35px;
+    left: 35px;
+    z-index: 20;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+}
+
+.wardrobe-box::-webkit-scrollbar {
+  width: 5px;
+}
+.wardrobe-box::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 10px;
+}
+
+.applied-garment {
+  position: 'absolute';
+  top: 20%;
+  left: 15%; 
+  width: 20%;
+}
+
+
+
+.setting {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-Index: 10;
+  background: rgba(0,0,0,0.6);
+  border: none;
+  border-Radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  font-Size: 1.2rem;
+  display: flex;
+  align-Items: center;
+  justify-Content: center
+}
+
+.sidebar-header h2 { margin-bottom: 15px; }
+
+.toggle-group {
+  display: flex;
+  gap:8px;
+  margin-bottom: 15px;
+}
+
+.toggle-group button {
+  flex: 1;
+  padding: 10px;
+  background: #2a2a2a;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+
+
+.toggle-group button.active { background: #007bff; }

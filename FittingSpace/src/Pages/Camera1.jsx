@@ -1,8 +1,11 @@
 import { useRef, useEffect, useState } from 'react'
+import { useNavigate } from "react-router-dom"
 
 export default function Camera1() {
-const videoRef = useRef(null);
+  const videoRef = useRef(null);
   const photoRef = useRef(null);
+
+  const nav = useNavigate();
 
   const [hasPhoto, setHasPhoto] = useState(false);
   const [detectionData, setDetectionData] = useState(null);
@@ -21,7 +24,7 @@ const videoRef = useRef(null);
   // Button Styling 
   const btnStyle = { padding: '5px 12px', cursor: 'pointer' }; 
   
-  // --- GET CAMERA ---
+  // camera
   const getVideo = () => {
     navigator.mediaDevices
       .getUserMedia({ video: { width: 1920, height: 1080 } })
@@ -33,7 +36,7 @@ const videoRef = useRef(null);
       .catch(err => console.error(err));
   };
 
-  // --- START COUNTDOWN ---
+  // countdown
   const startCountdown = () => {
   
   setShowSettings(false); 
@@ -56,7 +59,7 @@ const videoRef = useRef(null);
     }, 1000);
   };
 
-  // --- ACTUAL PHOTO CAPTURE ---
+  // photo 
   const capturePhoto = async () => {
     const width = 1920;
     const height = 1080;
@@ -76,29 +79,27 @@ const videoRef = useRef(null);
     setHasPhoto(true);
     setIsProcessing(true);
 
-    //converting canvas into a img file
     photo.toBlob(async (blob) => {
       const formData = new FormData();
       formData.append('image', blob, 'capture.png');
 
       try {
-          //send it to python server
           const response = await fetch('http://127.0.0.1:5050/checking', {
             method: 'POST',
             body: formData,
           });
 
           const result = await response.json();
-
-          // save the coordinates python found
           setDetectionData(result);
 
           //TESTING PURPOSES DELETE AFTERWARDS
-          if (result.valid && result.landmarks) {
+          if (result.landmarks) {
+
             const ctx = photo.getContext('2d');
             ctx.fillStyle = "red"; // Color for the dots
             ctx.strokeStyle = "white";
             ctx.lineWidth = 3;
+            console.log("Flask result:", result);
 
             // result.landmarks is the filtered_points dictionary from Python
             Object.values(result.landmarks).forEach(point => {
@@ -139,72 +140,25 @@ const videoRef = useRef(null);
       {/* Settings Icon Button */}
       {!hasPhoto && countdown === null && (
         <button
-          onClick={() => setShowSettings(prev => !prev)}
-          style={{
-            position: 'absolute',
-            top: '15px',
-            left: '15px',
-            zIndex: 10,
-            background: 'rgba(0,0,0,0.6)',
-            border: 'none',
-            borderRadius: '50%',
-            width: '40px',
-            height: '40px',
-            cursor: 'pointer',
-            fontSize: '1.2rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-          title="Settings"
-        >
+          className="Settings"
+          onClick={() => setShowSettings(prev => !prev)}>
           ⚙️
         </button>
       )}
 
       {/* Settings Popup Modal */}
       {showSettings && !hasPhoto && countdown === null && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            background: 'white',
-            padding: '20px 30px',
-            borderRadius: '12px',
-            zIndex: 20,
-            boxShadow: '0 8px 16px rgba(0,0,0,0.5)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '15px',
-            color: '#333',
-            width: '250px'
-          }}
-        >
+        <div className="popup_window">
           <h3 style={{ margin: 0 }}>Settings</h3>
 
           {/* Delay Control */}
-          <div
-            style={{
-              width: '110%',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              border: '1px solid #ccc',
-              borderRadius: '10px',
-              padding: '10px 12px',
-              background: '#f9f9f9'
-            }}
-          >
+          <div className="delay_control">
             <span style={{ fontWeight: '500' }}>Delay</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <strong>{delaySeconds}s</strong>
               <button
                 onClick={decreaseTimer}
-                style={{ ...btnStyle, padding: '4px 10px' }}
-              >
+                style={{ ...btnStyle, padding: '4px 10px' }}>
                 -
               </button>
               <button
@@ -217,18 +171,7 @@ const videoRef = useRef(null);
           </div>
 
           {/* Brightness Control */}
-          <div
-            style={{
-              width: '110%',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              border: '1px solid #ccc',
-              borderRadius: '10px',
-              padding: '10px 12px',
-              background: '#f9f9f9'
-            }}
-          >
+          <div className="brightness_control">
             <span style={{ fontWeight: '500' }}>Light</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <strong>{brightness}%</strong>
@@ -248,18 +191,7 @@ const videoRef = useRef(null);
           </div>
 
           {/* Contrast Control */}
-          <div
-            style={{
-              width: '110%',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              border: '1px solid #ccc',
-              borderRadius: '10px',
-              padding: '10px 12px',
-              background: '#f9f9f9'
-            }}
-          >
+          <div className="contrast_control">
             <span style={{ fontWeight: '500' }}>Contrast</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <strong>{contrast}%</strong>
@@ -279,17 +211,9 @@ const videoRef = useRef(null);
           </div>
 
           <button
+            className="done_setting"
             onClick={() => setShowSettings(false)}
-            style={{
-              padding: '10px 16px',
-              marginTop: '20px',
-              cursor: 'pointer',
-              background: '#333',
-              color: 'white',
-              border: 'none',
-              borderRadius: '10px',
-              width: '100%'
-            }}
+            Done
           >
             Done
           </button>
@@ -298,18 +222,7 @@ const videoRef = useRef(null);
 
       {/* Countdown Overlay */}
       {countdown !== null && (
-        <div
-          className="countdown"
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            fontSize: '4rem',
-            color: 'white',
-            zIndex: 10
-          }}
-        >
+        <div className="countdown">
           {countdown}
         </div>
       )}
@@ -319,6 +232,7 @@ const videoRef = useRef(null);
         style={{
           display: hasPhoto ? 'none' : 'block',
           width: '100%',
+          transform: 'scaleX(-1)',
           filter: `brightness(${brightness}%) contrast(${contrast}%)`
         }}
       ></video>
@@ -327,15 +241,7 @@ const videoRef = useRef(null);
       {!hasPhoto && countdown === null && (
         <button
           onClick={startCountdown}
-          style={{
-            position: 'absolute',
-            bottom: '20px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 10
-          }}
-        >
-          Capture
+          className="capture-btn">
         </button>
       )}
 
@@ -352,7 +258,18 @@ const videoRef = useRef(null);
             {detectionData?.valid ? (
               <>
                 <p>✅ This looks fantastic!</p>
-                <button onClick={() => alert("Moving to dressing room!")}>
+                <button
+                  onClick={() => {
+                    const imgUrl = photoRef.current.toDataURL("image/png");
+
+                    nav("/Page1", {
+                      state: {
+                        imageUrl: imgUrl,
+                        landmarks: detectionData.landmarks,
+                      },
+                    });
+                  }}
+                >
                   Continue
                 </button>
               </>

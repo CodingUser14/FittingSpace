@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from 'react'
 
-export default function Camera1() {
-const videoRef = useRef(null);
+function App() {
+  const videoRef = useRef(null);
   const photoRef = useRef(null);
 
   const [hasPhoto, setHasPhoto] = useState(false);
@@ -12,10 +12,8 @@ const videoRef = useRef(null);
   const [delaySeconds, setDelaySeconds] = useState(3); 
   const [showSettings, setShowSettings] = useState(false); 
 
-  // Brightness
+  // Brightness and Contrast
   const [brightness, setBrightness] = useState(100); 
-
-  // Contrast
   const [contrast, setContrast] = useState(100); 
 
   // Button Styling 
@@ -70,7 +68,7 @@ const videoRef = useRef(null);
     let ctx = photo.getContext('2d');
     ctx.drawImage(video, 0, 0, width, height);
 
-    ctx.filter = `brightness(${brightness}%) contrast(${contrast}%)`;
+    ctx.filter = "brightness(${brightness}%)contrast(${contrast}%)";
     ctx.drawImage(video, 0,0,width,height);
 
     setHasPhoto(true);
@@ -139,158 +137,75 @@ const videoRef = useRef(null);
       {/* Settings Icon Button */}
       {!hasPhoto && countdown === null && (
         <button
-          onClick={() => setShowSettings(prev => !prev)}
-          style={{
-            position: 'absolute',
-            top: '15px',
-            left: '15px',
-            zIndex: 10,
-            background: 'rgba(0,0,0,0.6)',
-            border: 'none',
-            borderRadius: '50%',
-            width: '40px',
-            height: '40px',
-            cursor: 'pointer',
-            fontSize: '1.2rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
+          class="setting"
           title="Settings"
-        >
+          onClick={() => setShowSettings(prev => !prev)}>
           ⚙️
         </button>
       )}
 
       {/* Settings Popup Modal */}
       {showSettings && !hasPhoto && countdown === null && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            background: 'white',
-            padding: '20px 30px',
-            borderRadius: '12px',
-            zIndex: 20,
-            boxShadow: '0 8px 16px rgba(0,0,0,0.5)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '15px',
-            color: '#333',
-            width: '250px'
-          }}
-        >
+        <div class="popup_window">
           <h3 style={{ margin: 0 }}>Settings</h3>
 
           {/* Delay Control */}
-          <div
-            style={{
-              width: '110%',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              border: '1px solid #ccc',
-              borderRadius: '10px',
-              padding: '10px 12px',
-              background: '#f9f9f9'
-            }}
-          >
+          <div class="delay_control">
             <span style={{ fontWeight: '500' }}>Delay</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <strong>{delaySeconds}s</strong>
               <button
                 onClick={decreaseTimer}
-                style={{ ...btnStyle, padding: '4px 10px' }}
-              >
+                style={{ ...btnStyle, padding: '4px 10px' }}>
                 -
               </button>
               <button
                 onClick={increaseTimer}
-                style={{ ...btnStyle, padding: '4px 10px' }}
-              >
+                style={{ ...btnStyle, padding: '4px 10px' }}>
                 +
               </button>
             </div>
           </div>
 
           {/* Brightness Control */}
-          <div
-            style={{
-              width: '110%',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              border: '1px solid #ccc',
-              borderRadius: '10px',
-              padding: '10px 12px',
-              background: '#f9f9f9'
-            }}
-          >
+          <div class="brightness_control">
             <span style={{ fontWeight: '500' }}>Light</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <strong>{brightness}%</strong>
               <button
                 onClick={() => setBrightness(prev => Math.max(0, prev - 10))}
-                style={{ ...btnStyle, padding: '4px 10px' }}
-              >
+                style={{ ...btnStyle, padding: '4px 10px' }}>
                 -
               </button>
               <button
                 onClick={() => setBrightness(prev => Math.min(200, prev + 10))}
-                style={{ ...btnStyle, padding: '4px 10px' }}
-              >
+                style={{ ...btnStyle, padding: '4px 10px' }}>
                 +
               </button>
             </div>
           </div>
 
           {/* Contrast Control */}
-          <div
-            style={{
-              width: '110%',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              border: '1px solid #ccc',
-              borderRadius: '10px',
-              padding: '10px 12px',
-              background: '#f9f9f9'
-            }}
-          >
+          <div class="contrast_control">
             <span style={{ fontWeight: '500' }}>Contrast</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <strong>{contrast}%</strong>
               <button
                 onClick={() => setContrast(prev => Math.max(0, prev - 10))}
-                style={{ ...btnStyle, padding: '4px 10px' }}
-              >
+                style={{ ...btnStyle, padding: '4px 10px' }}>
                 -
               </button>
               <button
                 onClick={() => setContrast(prev => Math.min(200, prev + 10))}
-                style={{ ...btnStyle, padding: '4px 10px' }}
-              >
+                style={{ ...btnStyle, padding: '4px 10px' }}>
                 +
               </button>
             </div>
           </div>
 
           <button
-            onClick={() => setShowSettings(false)}
-            style={{
-              padding: '10px 16px',
-              marginTop: '20px',
-              cursor: 'pointer',
-              background: '#333',
-              color: 'white',
-              border: 'none',
-              borderRadius: '10px',
-              width: '100%'
-            }}
-          >
+            class="done_setting"
+            onClick={() => setShowSettings(false)}>
             Done
           </button>
         </div>
@@ -299,17 +214,7 @@ const videoRef = useRef(null);
       {/* Countdown Overlay */}
       {countdown !== null && (
         <div
-          className="countdown"
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            fontSize: '4rem',
-            color: 'white',
-            zIndex: 10
-          }}
-        >
+          className="countdown">
           {countdown}
         </div>
       )}
@@ -326,31 +231,20 @@ const videoRef = useRef(null);
       {/* Capture Button */}
       {!hasPhoto && countdown === null && (
         <button
-          onClick={startCountdown}
-          style={{
-            position: 'absolute',
-            bottom: '20px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 10
-          }}
-        >
-          Capture
+          class="capture-btn"
+          onClick={startCountdown}>
         </button>
       )}
 
       <div
         className={'result ' + (hasPhoto ? 'hasPhoto' : '')}
-        style={{ display: hasPhoto ? 'block' : 'none' }}
-      >
+        style={{ display: hasPhoto ? 'block' : 'none' }}>
         <canvas ref={photoRef}></canvas>
 
         {hasPhoto && (
           <div className="controls">
             {isProcessing && <p>Analyzing Body...</p>}
-
-            {detectionData?.valid ? (
-              <>
+            {detectionData?.valid ? ( <>
                 <p>✅ This looks fantastic!</p>
                 <button onClick={() => alert("Moving to dressing room!")}>
                   Continue
@@ -368,3 +262,4 @@ const videoRef = useRef(null);
   </div>
 );
 }
+export default App;

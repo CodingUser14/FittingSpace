@@ -84,7 +84,7 @@ button {
   border: none;
   outline: none;
   padding: 12px 24px;
-  background-image: linear-gradient(to right, #844FFF 0%, #FF4F84 50%, #844FFF 100%);
+  background-image: linear-gradient(to right, #833AB4 0%, #FD1D1D 50%, #FCB045 100%);
   background-size: 200%;
   background-position: 0%;
   color: #FFF;
@@ -119,9 +119,86 @@ button:hover {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 120px;
+  font-size: 4rem;
   color: white;
-  font-weight: 900;
-  text-shadow: 0 0 20px rgba(0,0,0,0.5);
-  pointer-events: none;
+  z-index: 10;
+}
+
+.setting {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 10;
+  background: rgba(0,0,0,0.6);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup_window {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px 30px;
+  border-radius: 12px;
+  z-index: 20;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  color: #333;
+  width: 250px;
+}
+
+.delay_control {
+  width: 110%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #f9f9f9;
+}
+
+.brightness_control {
+  width: 110%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #f9f9f9;
+}
+
+.contrast_control {
+  width: 110%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #f9f9f9;
+}
+
+.done_setting {          
+  padding: 10px 16px;
+  margin-top: 20px;
+  cursor: pointer;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  width: 100%;
 }
